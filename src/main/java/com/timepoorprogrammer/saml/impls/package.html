@@ -1,0 +1,40 @@
+<html>
+<body>
+<p>This package is the entry point to the standard implementation and any bespoke implementations we might
+    provide for customers wishing to make use of the SAML middleware project.</p>
+
+<h2>Package Specification</h2>
+
+<p>The package holds the basic factory classes that is invoked by different customer entry points (servlets) to
+    provide bespoke or default to the standard implementations of assertion consumer processors, assertion producer
+    processors, metadata handlers, and audit message handler classes at the SAML middleware. It also holds some
+    vanilla standard consumer and producer classes for those who do not want to bespoke SAML processing</p>
+
+
+<p>As a developer if your customer wants to access a service that already has a known assertion processing ingress point
+    (so, say myview/consumer/servlet/SAML11AssertionConsumerService or
+    myview/consumer/servlet/SAML2AssertionConsumerServlet)
+    and doesn't need to do anything special in terms of inbound assertion processing or auditing, then you won't need to
+    add any customer specific subdirectory here and can use the standard SAML2AssertionConsumer and
+    SAML11AssertionConsumer
+    All (I say all, but its still a bit of work) that is needed is to make sure hosting can commission the new customer
+    by ensuring they have routing setup for that customer in saml.properties in the hosting network environment, and
+    by making sure hosting have a new metadata entry for the customer as expected with an exchange of trust in terms
+    of the customer giving us their entity descriptor and us giving them ours for the given service they want to access.
+    See http://confluence/display/SOAStrategy/SAMLAssertion+Processing for more details on the exchange of trust
+    information using SAML meta-data.</p>
+
+<p>But, if your customer wants to send us a custom content assertion, or wants auditing to work differently for
+    themselves, then you will need to create a subdirectory holding all their custom code at the middleware. If you
+    stick to the package structure within the project standard, so see the sub-directory <i>standard</i> then you
+    should be able to compartmentalise their code under <b>one</b> sub-package location instead of spraying it around
+    the moddleware's code base.</p>
+
+<p>You may even be able to put completely bespoke authentication validation (assertion processing) code under here.
+    Witness the sub-package <i>ga</i> at the middleware which holds custom cross-domain authentication validation
+    code for Goldman Sachs that doesn't use SAML, but instead uses a shared Message Authentication Code (MAC)
+    generation algorithm based on a shared secrey key. The sky is the limit, <b>but</b> the middleware is meant to
+    hold <b>only</b> cross-domain authentication code, and its supporting classes and nothing more. So if you are
+    unsure of what to do, ask james.ball@ngahr.com and I'll be happy to help.</p>
+</body>
+</html>
